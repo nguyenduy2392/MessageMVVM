@@ -17,6 +17,7 @@ class ContactViewController: UIViewController {
     var sendToID: String!
     
     var contactModel = ContactViewModel()
+  let disposeBag = DisposeBag()
     override func viewDidLoad() {
         super.viewDidLoad()
         contactModel.getContact()
@@ -25,8 +26,14 @@ class ContactViewController: UIViewController {
         contactTableView.register(nid, forCellReuseIdentifier: "UserTableViewCell")
         
         _ = self.contactModel.contacts.asObservable().bind(to: contactTableView.rx.items(cellIdentifier: "UserTableViewCell", cellType: UserTableViewCell.self)) {row, item, cell in
-            cell.configure(name: item.name)
+          cell.configure(name: item.name!)
         }
+      
+      contactTableView.rx.itemSelected
+        .subscribe(onNext: { [weak self] indexPath in
+          self?.sendToID = self?.contactModel.contacts.value[indexPath.row].id
+          self?.performSegue(withIdentifier: "ChatRoom", sender: nil)
+        }).disposed(by: disposeBag)
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,13 +43,7 @@ class ContactViewController: UIViewController {
 }
 
 extension ContactViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.sendToID = contactModel.contacts.value[indexPath.row].id
-        
-        performSegue(withIdentifier: "ChatRoom", sender: nil)
-    }
-    
+  
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "ChatRoom") {
             let nav = segue.destination as! UINavigationController

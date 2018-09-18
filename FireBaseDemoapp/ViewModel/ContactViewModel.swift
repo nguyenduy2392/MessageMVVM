@@ -21,19 +21,15 @@ class ContactViewModel {
 extension ContactViewModel: ContactViewModelDelegate {
     func getContact() {
         DBProvider.Instance.contactRef.observeSingleEvent(of: DataEventType.value) { (snapshot: DataSnapshot) in
-            if let myContacts = snapshot.value as? NSDictionary {
-                for (key, val) in myContacts {
-                    if let contactData = val as? NSDictionary {
-                        if let email = contactData["email"] as? String{
-                            let id = key as! String
-                            if id != Auth.auth().currentUser?.uid {
-                                let newContact = Contact(id: id, name: email)
-                                self.contacts.value.append(newContact)
-                            }
-                        }
-                    }
-                }
-            }
+          guard let myContacts = snapshot.value as? NSDictionary else { return }
+          for (key, val) in myContacts {
+              guard let contactData = val as? NSDictionary,
+                  let email = contactData["email"] as? String,
+                  let id = key as? String,
+                  id != Auth.auth().currentUser?.uid else { continue }
+              let newContact = Contact(id: id, name: email)
+              self.contacts.value.append(newContact)
+          }
         }
     }
 }

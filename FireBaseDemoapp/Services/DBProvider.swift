@@ -15,13 +15,13 @@ protocol FetchDataDelegate: class {
 }
 
 class DBProvider {
-    private static let _instance = DBProvider()
+    private static let instance = DBProvider()
     
     weak var delegate: FetchDataDelegate?
     private init() {}
     
     static var Instance: DBProvider {
-        return _instance
+        return instance
     }
     
     var dbRef: DatabaseReference {
@@ -56,4 +56,47 @@ class DBProvider {
         let data: Dictionary<String, Any> = ["email": email, "password": password]
         contactRef.child(id).setValue(data)
     }
+  
+  func sendMessage(senderId: String, senderName: String, text: String, sendToID: String) {
+    let data: Dictionary<String, Any> = [
+      Constants.message.senderId: senderId,
+      Constants.message.senderName: senderName,
+      Constants.message.messageType: Constants.messageTextType,
+      Constants.message.text: text,
+      Constants.message.url: "",
+      Constants.message.toId: sendToID
+    ]
+    messagerRef.childByAutoId().setValue(data)
+  }
+  
+  func sendMediaMessage(senderId: String, senderName: String, url: String, sendToID: String) {
+    
+    let data: Dictionary<String, Any> = [
+      Constants.message.senderId: senderId,
+      Constants.message.senderName: senderName,
+      Constants.message.messageType: Constants.messageMediaType,
+      Constants.message.text: "",
+      Constants.message.url: url,
+      Constants.message.toId: sendToID
+    ]
+    DBProvider.Instance.messagerRef.childByAutoId().setValue(data)
+  }
+  
+  func sendMedia(image: Data?, video: URL?, timestamp: TimeInterval, senderId: String, senderName: String, sendToID: String) {
+      let path = storageRef.child(senderId + "\(timestamp).jpg")
+      path.putData(image!, metadata: nil) { (metadata: StorageMetadata?, error: Error?) in
+        if error != nil {
+          // ERROR
+        } else {
+          // Fetch the download URL
+          path.downloadURL(completion: { (url: URL?, error: Error?) in
+            if error != nil {
+              // ERROR
+            } else {
+              self.sendMediaMessage(senderId: senderId, senderName: senderName, url: String(describing: url!), sendToID: sendToID)
+            }
+          })
+        }
+      }
+  }
 }

@@ -16,7 +16,7 @@ class ChatRoomViewController: JSQMessagesViewController, UIImagePickerController
 
     var sendToID: String!
     
-    var messageModel = MessageHandler()
+    var messageModel = MessageViewModel()
     let picker = UIImagePickerController()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +66,7 @@ class ChatRoomViewController: JSQMessagesViewController, UIImagePickerController
         return cell
     }
     
-    @IBAction func backBtn(_ sender: Any) {
+    @IBAction func backButtonDidTouched(_ sender: Any) {
         messageModel.removeObserve()
         dismiss(animated: true, completion: nil)
     }

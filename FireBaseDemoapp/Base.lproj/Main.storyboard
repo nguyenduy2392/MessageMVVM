@@ -72,9 +72,9 @@
                     </view>
                     <navigationItem key="navigationItem" id="9QC-BB-t85"/>
                     <connections>
-                        <outlet property="emailText" destination="wmL-cF-kZq" id="wIN-L0-Sm0"/>
+                        <outlet property="emailTextField" destination="wmL-cF-kZq" id="Sjj-d4-0lZ"/>
                         <outlet property="errorLable" destination="OPb-O8-QFC" id="M6b-3c-rto"/>
-                        <outlet property="passwordText" destination="2Hm-Rn-mwy" id="gta-E6-vsA"/>
+                        <outlet property="passwordTextField" destination="2Hm-Rn-mwy" id="UUj-x0-4AV"/>
                         <segue destination="HGZ-71-VRq" kind="show" identifier="ContactsSegue" id="P4K-1b-CXn"/>
                     </connections>
                 </viewController>
@@ -128,7 +128,7 @@
                     <navigationItem key="navigationItem" title="Chat" id="m8Z-CF-lMB">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="VpE-7j-Rjm">
                             <connections>
-                                <action selector="backBtn:" destination="8jj-7k-ngd" id="Kla-Bo-cIj"/>
+                                <action selector="backButtonDidTouched:" destination="8jj-7k-ngd" id="pfE-YK-KV2"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

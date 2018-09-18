@@ -11,11 +11,6 @@ import Firebase
 import RxSwift
 //import FBSDKLoginKit
 
-protocol LoginViewModelDelegate {
-    func register() -> ()
-    func login() -> ()
-}
-
 class LoginViewModel {
     var email: Variable<String> = Variable("")
     var password: Variable<String> = Variable("")

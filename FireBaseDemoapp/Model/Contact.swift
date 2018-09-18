@@ -8,23 +8,17 @@
 
 import Foundation
 
-class Contact {
-    private var _name: String = ""
-    private var _id: String = ""
-    init (id: String, name: String) {
-        self._id = id
-        self._name = name
-    }
-    
-    var name: String {
-        get {
-            return _name
-        }
-    }
-    
-    var id: String {
-        get {
-            return _id
-        }
-    }
+protocol ContactModelPresentable {
+  var id: String? { get }
+  var name: String? { get }
+}
+
+class Contact: ContactModelPresentable {
+  var id: String?
+  var name: String?
+  
+  init (id: String, name: String) {
+    self.id = id
+    self.name = name
+  }
 }

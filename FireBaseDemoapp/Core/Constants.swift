@@ -9,17 +9,17 @@
 import Foundation
 
 class Constants {
-    static let Message: MessageRow = MessageRow()
-    static let MessageTextType = "text"
-    static let MessageMediaType = "media"
+    static let message: MessageRow = MessageRow()
+    static let messageTextType = "text"
+    static let messageMediaType = "media"
 }
 
 class MessageRow: Constants {
-    let SenderId = "senderId"
-    let SenderName = "senderName"
-    let MessageType = "type"
-    let Text = "text"
-    let URL = "url"
-    let ToId = "toId"
+    let senderId = "senderId"
+    let senderName = "senderName"
+    let messageType = "type"
+    let text = "text"
+    let url = "url"
+    let toId = "toId"
     
 }

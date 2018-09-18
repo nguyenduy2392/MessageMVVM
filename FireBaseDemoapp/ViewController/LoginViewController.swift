@@ -13,8 +13,8 @@ import RxCocoa
 
 class LoginViewController: UIViewController {
     
-    @IBOutlet weak var emailText: UITextField!
-    @IBOutlet weak var passwordText: UITextField!
+    @IBOutlet weak var emailTextField: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var errorLable: UILabel!
     
     var ref: DatabaseReference!
@@ -23,15 +23,15 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        _ = emailText.rx.text
+        _ = emailTextField.rx.text
             .map {$0 ?? ""}
             .bind(to: loginViewModel.email)
-        _ = passwordText.rx.text
+        _ = passwordTextField.rx.text
             .map {$0 ?? ""}
             .bind(to: loginViewModel.password)
         
-        _ = loginViewModel.invalidLogin.asObservable().subscribe(onNext: {[weak self] val in
-            if val {
+        _ = loginViewModel.invalidLogin.asObservable().subscribe(onNext: {[weak self] isValid in
+            if isValid {
                 self?.performSegue(withIdentifier: "ContactsSegue", sender: nil)
             } else {
                 // Error

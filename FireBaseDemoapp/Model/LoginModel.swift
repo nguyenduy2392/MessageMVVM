@@ -8,23 +8,16 @@
 
 import Foundation
 
+protocol LoginModelPresentable {
+  var email: String? { get }
+  var password: String? { get }
+}
+
 class Login {
-    private var _email: String = ""
-    private var _password: String = ""
+    var email: String?
+    var password: String?
     init (email: String, password: String) {
-        self._email = email
-        self._password = password
-    }
-    
-    var email: String {
-        get {
-            return _email
-        }
-    }
-    
-    var password: String {
-        get {
-            return _password
-        }
+        self.email = email
+        self.password = password
     }
 }

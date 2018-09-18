@@ -14,68 +14,23 @@ import RxCocoa
 import JSQMessagesViewController
 import ObjectMapper
 
-class MessageHandler {
+class MessageViewModel {
     var messages: BehaviorRelay<[JSQMessage]> = BehaviorRelay(value: [])
     
     func sendMessage(senderId: String, senderName: String, text: String, sendToID: String) {
-        let data: Dictionary<String, Any> = [
-            Constants.Message.SenderId: senderId,
-            Constants.Message.SenderName: senderName,
-            Constants.Message.MessageType: Constants.MessageTextType,
-            Constants.Message.Text: text,
-            Constants.Message.URL: "",
-            Constants.Message.ToId: sendToID
-        ]
-        DBProvider.Instance.messagerRef.childByAutoId().setValue(data)
+      DBProvider.Instance.sendMessage(senderId: senderId, senderName: senderName, text: text, sendToID: sendToID)
     }
-    
+  
     func sendMediaMessage(senderId: String, senderName: String, url: String, sendToID: String) {
-        
-        let data: Dictionary<String, Any> = [
-            Constants.Message.SenderId: senderId,
-            Constants.Message.SenderName: senderName,
-            Constants.Message.MessageType: Constants.MessageMediaType,
-            Constants.Message.Text: "",
-            Constants.Message.URL: url,
-            Constants.Message.ToId: sendToID
-        ]
-        DBProvider.Instance.messagerRef.childByAutoId().setValue(data)
+      DBProvider.Instance.sendMediaMessage(senderId: senderId, senderName: senderName, url: url, sendToID: sendToID)
     }
     
     func sendMedia(image: Data?, video: URL?, senderId: String, senderName: String, sendToID: String) {
         let timestamp = NSDate().timeIntervalSince1970
         if image != nil {
-            let path = DBProvider.Instance.storageRef.child(senderId + "\(timestamp).jpg")
-            path.putData(image!, metadata: nil) { (metadata: StorageMetadata?, error: Error?) in
-                if error != nil {
-                    // ERROR
-                } else {
-                    // Fetch the download URL
-                    path.downloadURL(completion: { (url: URL?, error: Error?) in
-                        if error != nil {
-                            // ERROR
-                        } else {
-                            self.sendMediaMessage(senderId: senderId, senderName: senderName, url: String(describing: url!), sendToID: sendToID)
-                        }
-                    })
-                }
-            }
+          DBProvider.Instance.sendMedia(image: image, video: nil, timestamp: timestamp, senderId: senderId, senderName: senderName, sendToID: sendToID)
         } else if video != nil {
-            let path = DBProvider.Instance.storageRef.child(senderId + "\(timestamp).mp4")
-            path.putFile(from: video!, metadata: nil) { (metadata: StorageMetadata?, error: Error?) in
-                if error != nil {
-                    
-                } else {
-                    
-                    path.downloadURL(completion: { (url: URL?, error: Error?) in
-                        if error != nil {
-                            // ERROR
-                        } else {
-                            self.sendMediaMessage(senderId: senderId, senderName: senderName, url: String(describing: url!), sendToID: sendToID)
-                        }
-                    })
-                }
-            }
+          DBProvider.Instance.sendMedia(image: nil, video: video, timestamp: timestamp, senderId: senderId, senderName: senderName, sendToID: sendToID)
         } else {
             return
         }
@@ -89,10 +44,10 @@ class MessageHandler {
                 let jsonString = String(data: jsonData!, encoding: .utf8)
                 let message = MessageModel(JSONString: jsonString!)
                 if (sendToID == message?.toId && message?.senderId == Auth.auth().currentUser?.uid) || (message?.toId == Auth.auth().currentUser?.uid && sendToID == message?.senderId) {
-                    if message?.type == Constants.MessageTextType {
+                    if message?.type == Constants.messageTextType {
                         messages.append(JSQMessage(senderId: message?.senderId, displayName: message?.senderName, text: message?.text))
                         self.messages.accept(messages)
-                    } else if message?.type == Constants.MessageMediaType {
+                    } else if message?.type == Constants.messageMediaType {
                         DispatchQueue(label: "load").async {
                             do {
                                 let data = try Data(contentsOf: URL(string: (message?.url)!)!)
