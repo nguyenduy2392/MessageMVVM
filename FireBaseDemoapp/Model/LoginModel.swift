@@ -8,11 +8,6 @@
 
 import Foundation
 
-protocol LoginModelPresentable {
-  var email: String? { get }
-  var password: String? { get }
-}
-
 class Login {
     var email: String?
     var password: String?

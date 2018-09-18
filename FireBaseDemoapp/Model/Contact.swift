@@ -8,12 +8,7 @@
 
 import Foundation
 
-protocol ContactModelPresentable {
-  var id: String? { get }
-  var name: String? { get }
-}
-
-class Contact: ContactModelPresentable {
+class Contact {
   var id: String?
   var name: String?
   

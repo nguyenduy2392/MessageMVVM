@@ -9,16 +9,7 @@
 import Foundation
 import ObjectMapper
 
-protocol MessageModelPresentable {
-    var senderId: String? { get }
-    var senderName: String? { get }
-    var type: String? {get}
-    var text : String? {get}
-    var url : String? {get}
-    var toId : String? {get}
-}
-
-struct MessageModel : Mappable, MessageModelPresentable {
+struct MessageModel : Mappable {
     
     init() {
         self.senderId = ""
